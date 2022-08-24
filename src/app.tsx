@@ -29,7 +29,7 @@ import { ReauthModalProvider } from '@/contexts/reauth-modal-context';
 import DownForMaintenance from '@/pages/down-for-maintenance';
 
 import useUrlViewTracking from './hooks/use-url-view-tracking';
-import { CobaltThemeProvider } from './jss/theme';
+import { CobaltThemeProvider, useCobaltTheme } from './jss/theme';
 
 import 'react-datepicker/dist/react-datepicker.css';
 import 'react-multi-carousel/lib/styles.css';
@@ -40,12 +40,53 @@ const AppWithProviders: FC = () => {
 	const { account, institution, initialized } = useAccount();
 
 	const { pathname } = useLocation();
+	const { colors } = useCobaltTheme();
 
 	useEffect(() => {
 		window.scrollTo(0, 0);
 	}, [pathname]);
 
 	useUrlViewTracking();
+
+	useEffect(() => {
+		const links: NodeListOf<HTMLLinkElement> = document.querySelectorAll("link[rel~='icon']");
+
+		links.forEach((link) => {
+			const faviconUrl = link.href || `${window.location.origin}/favicon.ico`;
+			const faviconWidth = parseInt(link.sizes.value.split('x')[0], 10) || 16;
+			const faviconHeight = parseInt(link.sizes.value.split('x')[1], 10) || 16;
+
+			function onImageLoaded() {
+				// Create a canvas to draw on
+				const canvas = document.createElement('canvas');
+				canvas.width = faviconWidth;
+				canvas.height = faviconHeight;
+
+				// Get the canvas context
+				const context = canvas.getContext('2d');
+				if (!context) {
+					return;
+				}
+
+				// Use contenxt to draw the favicon
+				context.drawImage(img, 0, 0);
+
+				// Change the color of the favicon
+				context.globalCompositeOperation = 'source-in';
+				context.fillStyle = colors.p500;
+				context.fillRect(0, 0, faviconWidth, faviconHeight);
+				context.fill();
+
+				// Set the favicon element to the recolored version (Chrome needs image/x-icon)
+				link.type = 'image/x-icon';
+				link.href = canvas.toDataURL();
+			}
+
+			const img = document.createElement('img');
+			img.addEventListener('load', onImageLoaded);
+			img.src = faviconUrl;
+		});
+	}, [colors.p500]);
 
 	if (!initialized) {
 		return <Loader />;
