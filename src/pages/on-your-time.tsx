@@ -89,7 +89,7 @@ const OnYourTime: FC = () => {
 		return contentService
 			.fetchContentList({
 				format,
-				maxLengthMinutes: parseInt(selectedLength, 10),
+				...(selectedLength && { maxLengthMinutes: parseInt(selectedLength, 10) }),
 			})
 			.fetch()
 			.then((response) => {
