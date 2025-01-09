@@ -11,4 +11,12 @@ export const institutionReferrersService = {
 			url: `/institution-feature-institution-referrers/${featureId}`,
 		});
 	},
+	getReferrerByUrlName(urlName: string) {
+		return httpSingleton.orchestrateRequest<{
+			institutionReferrer: InstitutionReferrer;
+		}>({
+			method: 'get',
+			url: `/institution-referrers/${urlName}`,
+		});
+	},
 };

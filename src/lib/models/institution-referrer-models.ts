@@ -8,6 +8,7 @@ export interface InstitutionReferrer {
 	pageContent: string;
 	ctaTitle: string;
 	ctaDescription: string;
+	intakeScreeningFlowId: string;
 }
 
 export interface InstitutionFeatureInstitutionReferrer {
