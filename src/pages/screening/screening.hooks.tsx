@@ -145,6 +145,9 @@ export function useScreeningNavigation() {
 				case ScreeningSessionDestinationId.MENTAL_HEALTH_PROVIDER_RECOMMENDATIONS:
 					window.location.href = '/connect-with-support/recommendations';
 					return;
+				case ScreeningSessionDestinationId.INSTITUTION_REFERRAL:
+					window.location.href = `${destination.context.institutionReferralUrl}`;
+					return;
 				case ScreeningSessionDestinationId.ONE_ON_ONE_PROVIDER_LIST:
 				default: {
 					navigate(
