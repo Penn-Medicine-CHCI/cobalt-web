@@ -148,6 +148,17 @@ export function useScreeningNavigation() {
 				case ScreeningSessionDestinationId.INSTITUTION_REFERRAL:
 					window.location.href = `${destination.context.institutionReferralUrl}`;
 					return;
+				case ScreeningSessionDestinationId.INSTITUTION_REFERRER_DETAIL:
+					revalidator.revalidate();
+					navigate(
+						{
+							pathname: `/referrals/${destination.context.institutionReferrerUrlName}`,
+						},
+						{
+							replace,
+						}
+					);
+					return;
 				case ScreeningSessionDestinationId.ONE_ON_ONE_PROVIDER_LIST:
 				default: {
 					navigate(
