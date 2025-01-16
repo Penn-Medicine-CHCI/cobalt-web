@@ -497,7 +497,9 @@ export const MhicOrderDetails = ({ patientOrder, pastPatientOrders }: Props) => 
 											{patientOrder.screeningSession?.completedAtDescription ??
 												patientOrder.intakeScreeningSession?.completedAtDescription}
 										</strong>{' '}
-										by{' '}
+										{patientOrder.mostRecentScreeningSessionCreatedByAccountDisplayName && (
+											<span>by </span>
+										)}
 										<strong>
 											{patientOrder.mostRecentScreeningSessionCreatedByAccountDisplayName ??
 												patientOrder.mostRecentIntakeScreeningSessionCreatedByAccountDisplayName}
