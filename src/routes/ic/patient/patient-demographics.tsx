@@ -251,6 +251,7 @@ const PatientDemographics = () => {
 								{institution.integratedCarePatientDemographicsRequired && (
 									<p className="mb-6">This information is required. </p>
 								)}
+
 								<InputHelper
 									className="mb-2"
 									label="Preferred Language"
