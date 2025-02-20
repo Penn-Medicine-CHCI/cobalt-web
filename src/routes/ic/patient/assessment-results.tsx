@@ -177,17 +177,15 @@ export const PatientAssessmentResults = () => {
 											care practice.
 										</p>
 									)}
+
 									{patientOrder.patientOrderReferralSourceId ===
-										PatientOrderReferralSourceId.SELF && (
+										PatientOrderReferralSourceId.PROVIDER && (
 										<p className="mb-6 fs-large">
-											Based on the symptoms reported, we recommend that you meet with a{' '}
-											<strong>Mental Health Provider</strong>.
+											The Mental Health Provider will discuss treatment options that will work in
+											collaboration with your primary care provider.
 										</p>
 									)}
-									<p className="mb-6 fs-large">
-										The Mental Health Provider will discuss treatment options that will work in
-										collaboration with your primary care provider.
-									</p>
+
 									{patientOrder.patientOrderReferralSourceId ===
 										PatientOrderReferralSourceId.PROVIDER && (
 										<p className="mb-6 fs-large">
@@ -200,6 +198,15 @@ export const PatientAssessmentResults = () => {
 											{institution.integratedCareAvailabilityDescription}.
 										</p>
 									)}
+
+									{patientOrder.patientOrderReferralSourceId ===
+										PatientOrderReferralSourceId.SELF && (
+										<p className="mb-6 fs-large">
+											Based on the symptoms reported, we recommend that you meet with a{' '}
+											<strong>Mental Health Provider</strong>.
+										</p>
+									)}
+
 									{patientOrder.patientOrderReferralSourceId ===
 										PatientOrderReferralSourceId.SELF && (
 										<p className="mb-6 fs-large">
