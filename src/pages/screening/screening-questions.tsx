@@ -417,17 +417,29 @@ const ScreeningQuestionsPage = () => {
 	const disableNextBtn = useMemo(() => {
 		if (!screeningQuestionContextResponse) {
 			return isSubmitting;
-		} else if (
+		}
+
+		if (
 			screeningQuestionContextResponse.screeningQuestion.screeningAnswerFormatId ===
 			ScreeningAnswerFormatId.FREEFORM_TEXT
 		) {
+			if (
+				screeningQuestionContextResponse.screeningQuestion.screeningAnswerContentHintId ===
+					ScreeningAnswerContentHintId.PHONE_NUMBER &&
+				confirmationPrompt
+			) {
+				return false;
+			}
+
 			return (
 				isSubmitting ||
 				// the user has filled inputs for all available options
 				Object.values(answerText).filter(Boolean).length !==
 					screeningQuestionContextResponse.screeningAnswerOptions.length
 			);
-		} else if (typeof screeningQuestionContextResponse.screeningQuestion.minimumAnswerCount !== 'number') {
+		}
+
+		if (typeof screeningQuestionContextResponse.screeningQuestion.minimumAnswerCount !== 'number') {
 			return (
 				isSubmitting ||
 				(!confirmationPrompt &&
