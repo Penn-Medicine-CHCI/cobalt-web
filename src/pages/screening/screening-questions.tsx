@@ -79,15 +79,20 @@ const ScreeningQuestionsPage = () => {
 				return;
 			}
 
-			const selections = submission.answers.map((answer) => ({
-				screeningAnswerOptionId: answer,
-				...(answerText[answer] && { text: answerText[answer] }),
-			}));
+			const selections: ScreeningAnswerSelection[] = submission.answers.map((answer) => {
+				const supplementalText = submission.supplementText[answer];
+				const textQuestionText = submission.answerText[answer];
+
+				return {
+					screeningAnswerOptionId: answer,
+					...(supplementalText && { text: supplementalText }),
+					...(textQuestionText && { text: textQuestionText }),
+				};
+			});
 
 			const submit = screeningService.answerQuestion(screeningQuestionContextId, selections, submission.force);
 
 			setIsSubmitting(true);
-
 			submit
 				.fetch()
 				.then((r) => {
