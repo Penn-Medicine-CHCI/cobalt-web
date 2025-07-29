@@ -79,31 +79,15 @@ const ScreeningQuestionsPage = () => {
 				return;
 			}
 
-			const selections: ScreeningAnswerSelection[] = [
-				...submission.answers.map((screeningAnswerOptionId) => {
-					const answer: ScreeningAnswerSelection = {
-						screeningAnswerOptionId,
-					};
+			const selections = submission.answers.map((answer) => ({
+				screeningAnswerOptionId: answer,
+				...(answerText[answer] && { text: answerText[answer] }),
+			}));
 
-					const answerText = submission.supplementText[screeningAnswerOptionId];
-
-					if (answerText) {
-						answer.text = answerText;
-					}
-
-					return answer;
-				}),
-				// answers to text questions
-				...Object.entries(submission.answerText)
-					.filter(([_, text]) => !!text)
-					.map(([screeningAnswerOptionId, text]) => ({
-						screeningAnswerOptionId,
-						text,
-					})),
-			];
 			const submit = screeningService.answerQuestion(screeningQuestionContextId, selections, submission.force);
 
 			setIsSubmitting(true);
+
 			submit
 				.fetch()
 				.then((r) => {
