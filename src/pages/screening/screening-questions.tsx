@@ -79,18 +79,43 @@ const ScreeningQuestionsPage = () => {
 				return;
 			}
 
-			const selections: ScreeningAnswerSelection[] = submission.answers.map((answer) => {
-				const supplementalText = submission.supplementText[answer];
-				const textQuestionText = submission.answerText[answer];
+			const selections: ScreeningAnswerSelection[] = [
+				...submission.answers.map((screeningAnswerOptionId) => {
+					return {
+						screeningAnswerOptionId,
+						...(submission.supplementText[screeningAnswerOptionId] && {
+							text: submission.supplementText[screeningAnswerOptionId],
+						}),
+					};
+				}),
 
-				return {
-					screeningAnswerOptionId: answer,
-					...(supplementalText && { text: supplementalText }),
-					...(textQuestionText && { text: textQuestionText }),
-				};
-			});
+				// answers to text questions
+				...Object.entries(submission.answerText)
+					.filter(([_, text]) => !!text)
+					.map(([screeningAnswerOptionId, text]) => ({
+						screeningAnswerOptionId,
+						text,
+					})),
+			];
 
-			const submit = screeningService.answerQuestion(screeningQuestionContextId, selections, submission.force);
+			// seems like freeform text input answers get duplicated when previously answers
+			// this selectionsMap stuff de-dups then and chooses the one with text, if it exists
+			const selectionsMap = new Map<string, ScreeningAnswerSelection>();
+			for (const item of selections) {
+				const existing = selectionsMap.get(item.screeningAnswerOptionId);
+				// if we haven’t stored this id yet, or the new item has text while
+				// the stored one doesn’t, overwrite
+				if (!existing || (item.text !== undefined && existing.text === undefined)) {
+					selectionsMap.set(item.screeningAnswerOptionId, item);
+				}
+			}
+			const selectionsArray = Array.from(selectionsMap.values());
+
+			const submit = screeningService.answerQuestion(
+				screeningQuestionContextId,
+				selectionsArray,
+				submission.force
+			);
 
 			setIsSubmitting(true);
 			submit
