@@ -117,8 +117,6 @@ const SessionCropModal: FC<SessionCropModalProps> = ({
 	onHide,
 	...props
 }) => {
-	console.log('cropImage', cropImage);
-
 	useTrackModalView('SessionCropModal', props.show);
 	const { addFlag } = useFlags();
 	const imageRef = useRef<HTMLImageElement>();
