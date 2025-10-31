@@ -60,6 +60,18 @@ export const Component = () => {
 		fetchPages();
 	}, [fetchPages]);
 
+	const handlePageButtonClick = useCallback(
+		async (pageId: string) => {
+			try {
+				const response = await pagesService.getPageEditId(pageId).fetch();
+				navigate(`/admin/pages/${response.pageId}`);
+			} catch (error) {
+				handleError(error);
+			}
+		},
+		[handleError, navigate]
+	);
+
 	const handleDeletePage = useCallback(async () => {
 		setIsLoading(true);
 
@@ -207,12 +219,15 @@ export const Component = () => {
 									return (
 										<TableRow key={page.pageId}>
 											<TableCell className="text-nowrap" width="48%">
-												<Link
-													className="text-decoration-none"
-													to={`/admin/pages/${page.pageId}`}
+												<Button
+													variant="link"
+													className="p-0 text-decoration-none text-left"
+													onClick={() => {
+														handlePageButtonClick(page.pageId);
+													}}
 												>
 													{page.name}
-												</Link>
+												</Button>
 											</TableCell>
 											<TableCell>
 												<div>
