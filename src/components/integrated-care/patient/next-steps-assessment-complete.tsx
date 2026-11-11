@@ -143,8 +143,9 @@ export const NextStepsAssessmentComplete = ({
 									<h4 className="mb-1">Schedule with a recommended resource</h4>
 									<p className="mb-10">
 										These resources are covered by your insurance and were recommended based on your
-										responses to the assessment. If you have any questions, please feel free to call
-										us at {institution.integratedCarePhoneNumberDescription}{' '}
+										responses to the assessment. If you have any questions, please contact{' '}
+										{institution.integratedCareContactName} at{' '}
+										{institution.integratedCarePhoneNumberDescription}{' '}
 										{institution.integratedCareAvailabilityDescription} or discuss with your primary
 										care provider.
 									</p>
@@ -208,7 +209,7 @@ export const NextStepsAssessmentComplete = ({
 											>
 												<NoData
 													title="How to contact us"
-													description={`Please call us at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
+													description={`Please contact ${institution?.integratedCareContactName} at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
 													actions={[]}
 													className={classNames({
 														'mb-6':
@@ -293,7 +294,7 @@ export const NextStepsAssessmentComplete = ({
 							>
 								<NoData
 									title="How to contact us"
-									description={`Our phone number is ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
+									description={`Please contact ${institution?.integratedCareContactName} at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
 									actions={[]}
 									className={classNames({
 										'mb-6':
