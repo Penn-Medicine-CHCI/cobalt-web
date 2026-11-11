@@ -41,6 +41,9 @@ const Reports = () => {
 			ACCOUNT_GEOLOCATION: true,
 			COURSE_FEEDBACK: account?.accountCapabilityFlags.canViewAnalytics,
 			COURSE_MCB_DOWNLOAD: account?.accountCapabilityFlags.canViewAnalytics,
+			COURSE_PARENTING_TEENS_WRAP_UP: account?.accountCapabilityFlags.canViewAnalytics,
+			COURSE_UNDERSTANDING_TRAUMA_WRAP_UP: account?.accountCapabilityFlags.canViewAnalytics,
+			COURSE_BUILDING_HEALTHY_SLEEP_WRAP_UP: account?.accountCapabilityFlags.canViewAnalytics,
 			ACCOUNT_TIMELINE: account?.accountCapabilityFlags.canViewAnalytics,
 		} as Record<string, boolean>;
 	}, [
