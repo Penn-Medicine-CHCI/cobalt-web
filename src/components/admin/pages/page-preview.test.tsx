@@ -1,7 +1,7 @@
 import React from 'react';
 import { act, render, screen, waitFor } from '@testing-library/react';
 import { createMemoryRouter, RouterProvider } from 'react-router-dom';
-import { PAGE_STATUS_ID, PageDetailModel, ROW_TYPE_ID } from '@/lib/models';
+import { PAGE_LOCATION_ID, PAGE_STATUS_ID, PageDetailModel, ROW_TYPE_ID } from '@/lib/models';
 import { analyticsService, resourceLibraryService } from '@/lib/services';
 import { getPageRowAnchorDomId } from '@/lib/utils';
 import { PagePreview } from './page-preview';
@@ -9,7 +9,7 @@ import { PagePreview } from './page-preview';
 jest.mock('@/components/header-v2', () => ({ HEADER_HEIGHT: 60 }));
 jest.mock('@/components/page-header', () => ({
 	__esModule: true,
-	default: () => null,
+	default: ({ title }: { title: React.ReactNode }) => <>{title}</>,
 }));
 jest.mock('@/components/loader', () => ({
 	__esModule: true,
@@ -24,8 +24,8 @@ jest.mock('@/hooks/use-handle-error', () => {
 });
 jest.mock('@/components/admin/pages', () => ({
 	MailingListModal: () => null,
-	getRendererForPageRow: ({ pageRow }: { pageRow: { pageRowId: string } }) => (
-		<div data-testid={`rendered-${pageRow.pageRowId}`} />
+	getRendererForPageRow: ({ pageRow, pageTitle }: { pageRow: { pageRowId: string }; pageTitle: string }) => (
+		<div data-testid={`rendered-${pageRow.pageRowId}`}>{pageTitle}</div>
 	),
 }));
 jest.mock('@/lib/services', () => ({
@@ -43,9 +43,13 @@ const fullWidthAnchorId = '7bb33dab-c63f-44ba-aa2c-c84aed759315';
 
 const page = {
 	pageId: 'page-id',
-	name: 'Resilience',
+	name: 'Internal resilience page name',
 	urlName: 'resilience',
 	pageStatusId: PAGE_STATUS_ID.LIVE,
+	pageStatusDescription: 'Published',
+	hasBeenPublished: true,
+	pageLocationId: PAGE_LOCATION_ID.FEATURED_TOPIC,
+	pageLocationDescription: 'Featured Topics',
 	headline: 'Resilience',
 	description: 'Description',
 	imageFileUploadId: 'image-id',
@@ -150,6 +154,15 @@ it('renders durable anchors on regular and full-width rows and scrolls to an ini
 	expect(regularAnchor).toHaveStyle('scroll-margin-top: 76px');
 	expect(fullWidthAnchor).toHaveStyle('scroll-margin-top: 76px');
 	expect(mockScrollIntoView).toHaveBeenCalledWith({ block: 'start' });
+});
+
+it('uses the displayed headline for row content instead of the internal page name', async () => {
+	renderPagePreview('/pages/resilience');
+
+	expect(await screen.findByRole('heading', { name: 'Resilience' })).toBeInTheDocument();
+	expect(screen.getByTestId('rendered-regular-row')).toHaveTextContent('Resilience');
+	expect(screen.getByTestId('rendered-full-width-row')).toHaveTextContent('Resilience');
+	expect(screen.queryByText('Internal resilience page name')).not.toBeInTheDocument();
 });
 
 it('handles hash-only navigation without fetching again or duplicating page-view analytics', async () => {
