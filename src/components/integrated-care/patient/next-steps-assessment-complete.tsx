@@ -117,7 +117,7 @@ export const NextStepsAssessmentComplete = ({
 						) : (
 							<NextStepsItem
 								title="Step 3: Schedule appointment with Mental Health Provider"
-								description={`Find an appointment by browsing the list of providers and choosing an available appointment time. To learn more about the resources available to you, please contact Donna Campo, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
+								description={`Find an appointment by browsing the list of providers and choosing an available appointment time. To learn more about the resources available to you, please contact ${institution.integratedCareContactName}, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Find Appointment',
@@ -255,7 +255,7 @@ export const NextStepsAssessmentComplete = ({
 									<Card.Body className="p-0">
 										<NextStepsItem
 											title="Step 3: Receive Resources"
-											description={`To learn more about the resources available to you, please contact Donna Campo, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
+											description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName}, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
 											button={{
 												variant: 'primary',
 												title: 'Call Us',
@@ -317,7 +317,7 @@ export const NextStepsAssessmentComplete = ({
 						{patientOrder.patientOrderReferralSourceId === PatientOrderReferralSourceId.PROVIDER && (
 							<NextStepsItem
 								title="Step 3: Call us for resources"
-								description={`To learn more about the resources available to you, please contact Donna Campo, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
+								description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName}, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Call Us',
@@ -334,7 +334,7 @@ export const NextStepsAssessmentComplete = ({
 						{patientOrder.patientOrderReferralSourceId === PatientOrderReferralSourceId.SELF && (
 							<NextStepsItem
 								title="Step 3: Call us for resources"
-								description={`To learn more about the resources available to you, please contact Donna Campo, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
+								description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName}, EASE Clinic Coordinator, at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Call Us',
