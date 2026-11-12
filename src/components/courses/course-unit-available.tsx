@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Button, Col, Row } from 'react-bootstrap';
+import { Button, Col, Modal, Row } from 'react-bootstrap';
 import classNames from 'classnames';
 import {
 	AnalyticsNativeEventTypeId,
@@ -129,6 +129,11 @@ interface CourseUnitAvailableProps {
 	onView?(courseUnit: CourseUnitModel): void;
 	onCompletionThresholdPassed(courseUnit: CourseUnitModel): void;
 	courseUnitContent: Content[];
+	screeningModalFlowId?: string;
+	autoOpenScreeningModal?: boolean;
+	screeningModalOpenRequestId?: number;
+	hideSkipWhenMultiSelectAnswered?: boolean;
+	hideInlineScreening?: boolean;
 }
 
 export const CourseUnitAvailable = ({
@@ -143,13 +148,24 @@ export const CourseUnitAvailable = ({
 	onView,
 	onCompletionThresholdPassed,
 	courseUnitContent,
+	screeningModalFlowId,
+	autoOpenScreeningModal = false,
+	screeningModalOpenRequestId = 0,
+	hideSkipWhenMultiSelectAnswered = false,
+	hideInlineScreening = false,
 }: CourseUnitAvailableProps) => {
 	const classes = useStyles();
 	const screeningFlowParams = useMemo(
 		() => ({ courseSessionId, screeningFlowId: courseUnit.screeningFlowId }),
 		[courseSessionId, courseUnit.screeningFlowId]
 	);
+	const screeningModalFlowParams = useMemo(
+		() => ({ courseSessionId, screeningFlowId: screeningModalFlowId }),
+		[courseSessionId, screeningModalFlowId]
+	);
 	const [isComplete, setIsComplete] = useState(false);
+	const [isScreeningModalOpen, setIsScreeningModalOpen] = useState(false);
+	const [screeningName, setScreeningName] = useState<string>();
 	const currentKalturaEntryIdRef = useRef<string>();
 
 	const handleVideoPlayerEvent = useCallback(
@@ -193,10 +209,22 @@ export const CourseUnitAvailable = ({
 		onView?.(courseUnit);
 	}, [courseUnit, onView]);
 
+	useEffect(() => {
+		setIsScreeningModalOpen(autoOpenScreeningModal);
+	}, [autoOpenScreeningModal, courseUnit.courseUnitId, screeningModalOpenRequestId]);
+
 	const handleUnitComplete = useCallback(() => {
 		setIsComplete(true);
 		onActivityComplete();
 	}, [onActivityComplete]);
+
+	const handleScreeningModalComplete = useCallback(() => {
+		setIsScreeningModalOpen(false);
+	}, []);
+
+	const handleScreeningNameChange = useCallback((name: string) => {
+		setScreeningName(name);
+	}, []);
 
 	const showNextButton = useMemo(() => {
 		return (
@@ -243,9 +271,10 @@ export const CourseUnitAvailable = ({
 				/>
 			)}
 
-			{(courseUnit.courseUnitTypeId === CourseUnitTypeId.QUIZ ||
-				courseUnit.courseUnitTypeId === CourseUnitTypeId.CARD_SORT ||
-				courseUnit.courseUnitTypeId === CourseUnitTypeId.REORDER) &&
+			{!hideInlineScreening &&
+				(courseUnit.courseUnitTypeId === CourseUnitTypeId.QUIZ ||
+					courseUnit.courseUnitTypeId === CourseUnitTypeId.CARD_SORT ||
+					courseUnit.courseUnitTypeId === CourseUnitTypeId.REORDER) &&
 				courseUnit.screeningFlowId && (
 					<div
 						className={classNames({
@@ -259,6 +288,30 @@ export const CourseUnitAvailable = ({
 						/>
 					</div>
 				)}
+
+			{screeningModalFlowId && (
+				<Modal
+					show={isScreeningModalOpen}
+					onHide={() => setIsScreeningModalOpen(false)}
+					centered
+					scrollable
+					size="lg"
+				>
+					<Modal.Header closeButton>
+						<Modal.Title>{screeningName ?? 'Loading screening...'}</Modal.Title>
+					</Modal.Header>
+					<Modal.Body>
+						{isScreeningModalOpen && (
+							<ScreeningFlow
+								screeningFlowParams={screeningModalFlowParams}
+								onScreeningFlowComplete={handleScreeningModalComplete}
+								onScreeningNameChange={handleScreeningNameChange}
+								hideSkipWhenMultiSelectAnswered={hideSkipWhenMultiSelectAnswered}
+							/>
+						)}
+					</Modal.Body>
+				</Modal>
+			)}
 
 			{courseUnit.courseUnitTypeId === CourseUnitTypeId.VIDEO && (
 				<CourseVideo
@@ -380,7 +433,22 @@ export const CourseUnitAvailable = ({
 				</>
 			)}
 
-			<div className="pt-10 d-flex justify-content-end">
+			<div
+				className={classNames('pt-10 d-flex align-items-center', {
+					'justify-content-between': screeningModalFlowId,
+					'justify-content-end': !screeningModalFlowId,
+				})}
+			>
+				{screeningModalFlowId && (
+					<Button
+						type="button"
+						variant="primary"
+						className="me-1 d-flex align-items-center text-decoration-none pe-3 cobalt-button cobalt-button-outline-primary"
+						onClick={() => setIsScreeningModalOpen(true)}
+					>
+						Leave Course Feedback
+					</Button>
+				)}
 				{showNextButton ? (
 					<Button
 						type="button"
@@ -389,7 +457,9 @@ export const CourseUnitAvailable = ({
 						onClick={onNextButtonClick}
 					>
 						{courseUnit.courseUnitTypeId === CourseUnitTypeId.FINAL ? 'Go to course home' : 'Next'}
-						<SvgIcon kit="far" icon="chevron-right" size={16} className="ms-1" />
+						{courseUnit.courseUnitTypeId !== CourseUnitTypeId.FINAL && (
+							<SvgIcon kit="far" icon="chevron-right" size={16} className="ms-1" />
+						)}
 					</Button>
 				) : (
 					<Button

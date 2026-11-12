@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { Button, Collapse, Form } from 'react-bootstrap';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import {
+	ScreeningAnswerFormatId,
 	ScreeningAnswerSelection,
 	ScreeningAnswersMessage,
 	ScreeningAnswersQuestionResult,
@@ -81,11 +82,15 @@ const useStyles = createUseThemedStyles({
 interface ScreeningQuestionContextProps {
 	initialScreeningQuestionContextId: string;
 	onScreeningFlowComplete(screeningSessionDestination?: ScreeningSessionDestination): void;
+	onScreeningNameChange?(screeningName: string): void;
+	hideSkipWhenMultiSelectAnswered?: boolean;
 }
 
 export const ScreeningQuestionContext = ({
 	initialScreeningQuestionContextId,
 	onScreeningFlowComplete,
+	onScreeningNameChange,
+	hideSkipWhenMultiSelectAnswered = false,
 }: ScreeningQuestionContextProps) => {
 	const classes = useStyles();
 	const handleError = useHandleError();
@@ -115,6 +120,7 @@ export const ScreeningQuestionContext = ({
 			const response = await screeningService.getScreeningQuestionContext(screeningQuestionContextId).fetch();
 
 			setScreeningQuestionContext(response);
+			onScreeningNameChange?.(response.screening.name);
 			setConfirmationPrompt({
 				screeningConfirmationPrompt: response.previouslyAnswered
 					? undefined
@@ -132,7 +138,7 @@ export const ScreeningQuestionContext = ({
 		} finally {
 			setIsLoading(false);
 		}
-	}, [handleError, screeningQuestionContextId]);
+	}, [handleError, onScreeningNameChange, screeningQuestionContextId]);
 
 	useEffect(() => {
 		fetchData();
@@ -284,6 +290,10 @@ export const ScreeningQuestionContext = ({
 	const handleSkipButtonClick = useCallback(() => {
 		submitAnswers({ selectedScreeningAnswers: [] });
 	}, [submitAnswers]);
+	const isManualMultiSelectSubmission =
+		hideSkipWhenMultiSelectAnswered &&
+		screeningQuestionContext?.screeningQuestion.screeningAnswerFormatId === ScreeningAnswerFormatId.MULTI_SELECT &&
+		screeningQuestionContext.screeningQuestion.minimumAnswerCount === 0;
 
 	const handleScreeningAnswerChange = useCallback(
 		(selectedScreeningAnswers: ScreeningAnswerSelection[]) => {
@@ -292,6 +302,7 @@ export const ScreeningQuestionContext = ({
 			}
 
 			if (
+				!isManualMultiSelectSubmission &&
 				screeningQuestionContext.screeningQuestion.preferAutosubmit &&
 				selectedScreeningAnswers.length >= screeningQuestionContext?.screeningQuestion.minimumAnswerCount
 			) {
@@ -301,7 +312,7 @@ export const ScreeningQuestionContext = ({
 
 			setSelectedAnswers(selectedScreeningAnswers);
 		},
-		[screeningQuestionContext, submitAnswers]
+		[isManualMultiSelectSubmission, screeningQuestionContext, submitAnswers]
 	);
 
 	const showNextAndPreviousButtons =
@@ -312,12 +323,20 @@ export const ScreeningQuestionContext = ({
 		const preferAutosubmit = screeningQuestionContext?.screeningQuestion.preferAutosubmit;
 		const previouslyAnswered = selectedAnswers.length > 0;
 
+		if (isManualMultiSelectSubmission && !previouslyAnswered) {
+			return false;
+		}
+
 		if (!previouslyAnswered && preferAutosubmit) {
 			return false;
 		}
 
 		return true;
-	}, [screeningQuestionContext?.screeningQuestion.preferAutosubmit, selectedAnswers.length]);
+	}, [
+		isManualMultiSelectSubmission,
+		screeningQuestionContext?.screeningQuestion.preferAutosubmit,
+		selectedAnswers.length,
+	]);
 
 	if (!screeningQuestionContext) {
 		return null;
@@ -468,23 +487,24 @@ export const ScreeningQuestionContext = ({
 												)}
 											</div>
 											<div className="d-flex align-items-center">
-												{screeningQuestionContext.screeningQuestion.minimumAnswerCount ===
-													0 && (
-													<Button
-														type="button"
-														variant="outline-primary"
-														className="me-1 d-flex align-items-center text-decoration-none pe-3"
-														onClick={handleSkipButtonClick}
-													>
-														Skip
-														<SvgIcon
-															kit="far"
-															icon="chevron-right"
-															size={16}
-															className="ms-1"
-														/>
-													</Button>
-												)}
+												{screeningQuestionContext.screeningQuestion.minimumAnswerCount === 0 &&
+													(!isManualMultiSelectSubmission ||
+														selectedAnswers.length === 0) && (
+														<Button
+															type="button"
+															variant="outline-primary"
+															className="me-1 d-flex align-items-center text-decoration-none pe-3"
+															onClick={handleSkipButtonClick}
+														>
+															Skip
+															<SvgIcon
+																kit="far"
+																icon="chevron-right"
+																size={16}
+																className="ms-1"
+															/>
+														</Button>
+													)}
 												{showNextButton && (
 													<Button
 														type="submit"

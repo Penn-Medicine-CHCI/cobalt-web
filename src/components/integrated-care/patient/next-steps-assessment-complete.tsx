@@ -117,7 +117,7 @@ export const NextStepsAssessmentComplete = ({
 						) : (
 							<NextStepsItem
 								title="Step 3: Schedule appointment with Mental Health Provider"
-								description={`Find an appointment by browsing the list of providers and choosing an available appointment time or call us at ${institution.integratedCarePhoneNumberDescription}.`}
+								description={`Find an appointment by browsing the list of providers and choosing an available appointment time. To learn more about the resources available to you, please contact ${institution.integratedCareContactName} at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Find Appointment',
@@ -143,8 +143,9 @@ export const NextStepsAssessmentComplete = ({
 									<h4 className="mb-1">Schedule with a recommended resource</h4>
 									<p className="mb-10">
 										These resources are covered by your insurance and were recommended based on your
-										responses to the assessment. If you have any questions, please feel free to call
-										us at {institution.integratedCarePhoneNumberDescription}{' '}
+										responses to the assessment. If you have any questions, please contact{' '}
+										{institution.integratedCareContactName} at{' '}
+										{institution.integratedCarePhoneNumberDescription}{' '}
 										{institution.integratedCareAvailabilityDescription} or discuss with your primary
 										care provider.
 									</p>
@@ -208,7 +209,7 @@ export const NextStepsAssessmentComplete = ({
 											>
 												<NoData
 													title="How to contact us"
-													description={`Please call us at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
+													description={`Please contact ${institution?.integratedCareContactName} at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
 													actions={[]}
 													className={classNames({
 														'mb-6':
@@ -255,7 +256,7 @@ export const NextStepsAssessmentComplete = ({
 									<Card.Body className="p-0">
 										<NextStepsItem
 											title="Step 3: Receive Resources"
-											description={`Call us at ${institution.integratedCarePhoneNumberDescription} ${institution.integratedCareAvailabilityDescription} to speak to a Mental Health Intake Coordinator about resources available in your area.`}
+											description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName} at ${institution.integratedCarePhoneNumberDescription}.`}
 											button={{
 												variant: 'primary',
 												title: 'Call Us',
@@ -293,7 +294,7 @@ export const NextStepsAssessmentComplete = ({
 							>
 								<NoData
 									title="How to contact us"
-									description={`Our phone number is ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
+									description={`Please contact ${institution?.integratedCareContactName} at ${institution?.integratedCarePhoneNumberDescription}. We are available ${institution.integratedCareAvailabilityDescription}.`}
 									actions={[]}
 									className={classNames({
 										'mb-6':
@@ -317,7 +318,7 @@ export const NextStepsAssessmentComplete = ({
 						{patientOrder.patientOrderReferralSourceId === PatientOrderReferralSourceId.PROVIDER && (
 							<NextStepsItem
 								title="Step 3: Call us for resources"
-								description={`Call us at ${institution.integratedCarePhoneNumberDescription} ${institution.integratedCareAvailabilityDescription} to speak to a Mental Health Intake Coordinator about resources available in your area.`}
+								description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName} at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Call Us',
@@ -334,7 +335,7 @@ export const NextStepsAssessmentComplete = ({
 						{patientOrder.patientOrderReferralSourceId === PatientOrderReferralSourceId.SELF && (
 							<NextStepsItem
 								title="Step 3: Call us for resources"
-								description={`Call us at ${institution.integratedCarePhoneNumberDescription} ${institution.integratedCareAvailabilityDescription} to speak to us about resources available in your area.`}
+								description={`To learn more about the resources available to you, please contact ${institution.integratedCareContactName} at ${institution.integratedCarePhoneNumberDescription}.`}
 								button={{
 									variant: 'primary',
 									title: 'Call Us',

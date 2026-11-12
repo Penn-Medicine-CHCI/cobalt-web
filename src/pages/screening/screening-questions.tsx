@@ -1002,13 +1002,12 @@ const ScreeningQuestionsPage = () => {
 									<AppointmentIllustration className="mb-8 w-100 h-auto" />
 									<h3 className="mb-6">Need help with the assessment?</h3>
 									<p>
-										Call the{' '}
-										{institution.integratedCareCallCenterName
-											? `${institution.integratedCareCallCenterName}`
-											: `${institution.integratedCareProgramName} Resource Center}`}{' '}
-										at {institution.integratedCarePhoneNumberDescription},{' '}
-										{institution.integratedCareAvailabilityDescription}. Mental Health Intake
-										Coordinators are available to help connect you with care.
+										Contact {institution.integratedCareContactName} at{' '}
+										{institution.integratedCarePhoneNumberDescription}
+										{institution.integratedCareAvailabilityDescription
+											? `, ${institution.integratedCareAvailabilityDescription}`
+											: ''}
+										. Mental Health Intake Coordinators are available to help connect you with care.
 									</p>
 								</Modal.Body>
 								<Modal.Footer className="pb-6 bg-transparent border-0 text-right">

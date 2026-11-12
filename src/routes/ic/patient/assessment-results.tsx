@@ -151,7 +151,7 @@ export const PatientAssessmentResults = () => {
 										</p>
 
 										<p className="mb-6 fs-large">
-											Please call us at{' '}
+											Please contact {institution?.integratedCareContactName} at{' '}
 											<strong>
 												<a href={`tel:${institution?.integratedCarePhoneNumber}`}>
 													{institution?.integratedCarePhoneNumberDescription}
@@ -198,7 +198,8 @@ export const PatientAssessmentResults = () => {
 										<p className="mb-6 fs-large">
 											You can <strong>schedule a telehealth appointment</strong> with a Mental
 											Health Provider by browsing the list of providers and choosing an available
-											appointment time. If you need an in-person appointment, please call us at{' '}
+											appointment time. If you need an in-person appointment, please contact{' '}
+											{institution?.integratedCareContactName} at{' '}
 											<a href={`tel:${institution?.integratedCarePhoneNumber}`}>
 												{institution?.integratedCarePhoneNumberDescription}
 											</a>{' '}
@@ -232,11 +233,8 @@ export const PatientAssessmentResults = () => {
 										PatientOrderReferralSourceId.SELF && (
 										<p className="mb-6 fs-large">
 											Please browse the list of available times and choose the appointment that is
-											most convenient for you. If you have any questions, please call{' '}
-											{institution.integratedCareCallCenterName
-												? `the ${institution.integratedCareCallCenterName}`
-												: 'us'}{' '}
-											at{' '}
+											most convenient for you. If you have any questions, please contact{' '}
+											{institution.integratedCareContactName} at{' '}
 											<a href={`tel:${institution?.integratedCarePhoneNumber}`}>
 												{institution?.integratedCarePhoneNumberDescription}
 											</a>{' '}
@@ -279,7 +277,7 @@ export const PatientAssessmentResults = () => {
 									{patientOrder.patientOrderReferralSourceId ===
 										PatientOrderReferralSourceId.PROVIDER && (
 										<p className="mb-6 fs-large">
-											Please call us at{' '}
+											Please contact {institution?.integratedCareContactName} at{' '}
 											<strong>
 												<a href={`tel:${institution?.integratedCarePhoneNumber}`}>
 													{institution?.integratedCarePhoneNumberDescription}
@@ -300,7 +298,7 @@ export const PatientAssessmentResults = () => {
 									{patientOrder.patientOrderReferralSourceId ===
 										PatientOrderReferralSourceId.SELF && (
 										<p className="mb-6 fs-large">
-											Please call us at{' '}
+											Please contact {institution?.integratedCareContactName} at{' '}
 											<strong>
 												<a href={`tel:${institution?.integratedCarePhoneNumber}`}>
 													{institution?.integratedCarePhoneNumberDescription}

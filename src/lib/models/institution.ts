@@ -71,6 +71,7 @@ export interface Institution {
 	staffUserExperienceBaseUrl: string;
 	integratedCarePhoneNumber: string;
 	integratedCarePhoneNumberDescription: string;
+	integratedCareContactName?: string;
 	integratedCareAvailabilityDescription: string;
 	integratedCareProgramName: string;
 	myChartName: string;
